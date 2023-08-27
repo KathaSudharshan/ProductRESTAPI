@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rest.ProductAPI.exception.ProductNotFoundException;
 import com.rest.ProductAPI.model.Product;
 
 /**
@@ -62,6 +63,7 @@ public class ProductRestController {
 	 */
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Object> deleteProduct(@PathVariable String id){
+		if(!productsMap.containsKey(Integer.valueOf(id)))throw new ProductNotFoundException();
 		productsMap.remove(Integer.valueOf(id));
 		return new ResponseEntity<>("Product deleted Successfully", HttpStatus.OK);
 	}
@@ -72,6 +74,7 @@ public class ProductRestController {
 	 */
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Object> getProduct(@PathVariable String id){
+		if(!productsMap.containsKey(Integer.valueOf(id)))throw new ProductNotFoundException();
 		return new ResponseEntity<>(productsMap.get(Integer.valueOf(id)), HttpStatus.OK);
 	}
 	
@@ -82,6 +85,7 @@ public class ProductRestController {
 	 */
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Object> updateProduct(@PathVariable String id, @RequestBody Product product){
+		if(!productsMap.containsKey(Integer.valueOf(id)))throw new ProductNotFoundException();
 		productsMap.remove(Integer.valueOf(id));
 		product.setId(Integer.valueOf(id));
 		productsMap.put(Integer.valueOf(id), product);
